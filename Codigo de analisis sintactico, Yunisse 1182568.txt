@@ -1,0 +1,189 @@
+Module Program
+    Sub Main()
+
+        Console.WriteLine("ANALIZADOR SINTACTICO\n")
+        Console.WriteLine("INGRESE UNA EXPRESION ...")
+        Console.WriteLine(" ")
+        Dim myString As String = Console.ReadLine
+        Console.WriteLine(" ")
+        Dim myChar As String
+        Dim TestLen As Integer = Len(myString)
+        Dim exp(TestLen) As String
+        Dim i As Integer
+        Dim J As Integer
+
+        For i = 0 To (TestLen - 1)
+
+            myChar = myString.Chars(i)
+
+            If myChar = "+" Or myChar = "-" Or myChar = "/" Or myChar = "*" Or myChar = "=" Or myChar = "^" Then
+                exp(i) = "operador"
+                Console.Write("<" & exp(i) & "," & myChar & ">")
+
+            ElseIf myChar = "a" Or myChar = "b" Or myChar = "c" Or myChar = "d" Or myChar = "e" Or myChar = "f" Or myChar = "g" Or myChar = "h" Or myChar = "i" Or myChar = "j" Or myChar = "k" Or myChar = "l" Then
+                exp(i) = "expresion"
+                Console.Write("<" & exp(i) & "," & myChar & ">")
+
+            ElseIf myChar = "1" Or myChar = "2" Or myChar = "3" Or myChar = "4" Or myChar = "5" Or myChar = "6" Or myChar = "7" Or myChar = "8" Or myChar = "9" Then
+                exp(i) = "numero"
+                Console.Write("<" & exp(i) & "," & myChar & ">")
+
+            ElseIf myChar = "(" Then
+                exp(i) = "parentesis_derecho"
+                Console.Write("<" & exp(i) & "," & myChar & ">")
+
+            ElseIf myChar = ")" Then
+                exp(i) = "parentesis_izquierdo"
+                Console.Write("<" & exp(i) & "," & myChar & ">")
+
+            Else
+                Console.WriteLine(myChar & "        TOKEN NO RECONOCIDO ")
+            End If
+        Next
+        Dim z, g, h, e As Integer
+        J = 0
+        z = 1
+        i = 0
+        h = 1
+        e = 0
+        g = 0
+
+        For i = 0 To TestLen - 1
+            If i = 0 Then
+                If myString.Chars(i) = "(" Then
+                    g = g + 1
+
+                Else
+                    If exp(i) = "exp" Or exp(i) = "num" Then
+
+                    Else
+                        If myString.Chars(i) = "-" Then
+
+                        Else
+                            If myString.Chars(i) = "+" Or myString.Chars(i) = "*" Or myString.Chars(i) = "/" Or myString.Chars(i) = "^" Or myString.Chars(i) = "=" Then
+                                Console.WriteLine("     ERROR EN EL CARACTER " & i & " :")
+                                Console.WriteLine("     no se puede escribir un operador " & myString.Chars(i) & " al comienzo de una expresion")
+                                h = 0
+
+                            End If
+                        End If
+                    End If
+                End If
+
+            Else
+                Select Case exp(i)
+
+                    Case "exp"
+
+                        If myString.Chars(i - 1) = "(" Then
+
+                        Else
+                            If exp(i - 1) = "op" Then
+
+                            Else
+                                Console.WriteLine("     ERROR EN EL CARACTER " & i & " :")
+                                Console.WriteLine("     no se puede poner una expresion despues de una expresion")
+                                h = 0
+                            End If
+                        End If
+
+                    Case "num"
+                        If myString.Chars(i - 1) = "(" Then
+
+                        Else
+                            If exp(i - 1) = "op" Then
+
+                            Else
+                                Console.WriteLine("     ERROR EN EL CARACTER " & i & " :")
+                                Console.WriteLine("     no se puede poner una expresion despues de una expresion")
+                                h = 0
+                            End If
+                        End If
+
+                    Case "op"
+
+                        If exp(i - 1) = "par_d" Or myString.Chars(i - 1) = "=" Then
+
+                            If myString.Chars(i) = "-" Then
+
+                            Else
+                                Console.WriteLine("     ERROR EN EL CARACTER " & i & " :")
+                                Console.WriteLine("     no se puede escribir el operador " & myString.Chars(i) & " despues de un " & myString.Chars(i - 1))
+                                h = 0
+                            End If
+                        Else
+                            If exp(i - 1) = "exp" Or exp(i - 1) = "num" Then
+
+                            Else
+                                If myString.Chars(i - 1) = ")" Then
+
+                                Else
+                                    Console.WriteLine("     ERROR EN EL CARACTER " & i & " :")
+                                    Console.WriteLine("     no se puede poner un operador depues de un operador")
+                                    h = 0
+
+                                End If
+                            End If
+                        End If
+
+                    Case "par_d"
+                        g = g + 1
+
+
+                        If myString.Chars(i - 1) = "(" Then
+
+                        Else
+                            If exp(i - 1) = "op" Then
+
+                            Else
+                                Console.WriteLine("     ERROR EN EL CARACTER " & i & " :")
+                                Console.WriteLine("     no se puede poner una parentesis cerrado despues de una parentesis abierto")
+                                h = 0
+
+                            End If
+
+                        End If
+                    Case "par_iz"
+
+                        e = e + 1
+                        If exp(i - 1) = "exp" Or exp(i - 1) = "num" Then
+
+                        Else
+                            If exp(i - 1) = "par_iz" Then
+
+                            Else
+                                If exp(i - 1) = "op" Then
+                                    Console.WriteLine("     ERROR EN EL CARACTER " & i & " :")
+                                    Console.WriteLine("     no se puede poner un parentesis abierto luego de un operador")
+                                Else
+                                    Console.WriteLine("     ERROR EN EL CARACTER " & i & " :")
+                                    Console.WriteLine("     no se puede poner dos parentesis juntos sin ninguna expresion")
+                                End If
+                                h = 0
+
+                            End If
+
+                        End If
+                End Select
+
+
+            End If
+        Next
+
+        If h = 1 Then
+            Console.WriteLine("     NO MUESTRA ERRORES")
+        End If
+        Console.WriteLine(" ")
+        Console.WriteLine("     RESULTADO DEL ANALIZADOR SINTACTICO:")
+        If h = 1 Then
+            If e = g Then
+                Console.WriteLine("     ::LA EXPRESION ESTA BIEN ESCRITA")
+            Else
+                Console.WriteLine("     ::LE FALTA UNA PARENTESIS")
+            End If
+        Else
+            Console.WriteLine("     ::ERROR EN LA EXPRESION")
+        End If
+
+    End Sub
+End Module
